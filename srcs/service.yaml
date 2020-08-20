@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: kube-system
+  annotations:
+    # service.beta.kubernetes.io/aws-load-balancer-ssl-cert: <the arn for our wildcard TLS cert>
+    # service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+spec:
+  selector:
+    k8s-app: nginx-ingress-lb
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 80
