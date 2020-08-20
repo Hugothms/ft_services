@@ -21,6 +21,10 @@ docker build -t mysql srcs/mysql
 kubectl apply -f srcs/mysql/deployment.yaml
 #kubectl describe deployment mysql-deployment
 
+# ! Wordpress
+docker build -t wordpress srcs/wordpress
+kubectl apply -f srcs/wordpress/deployment.yaml
+#kubectl describe deployment nginx-deployment
 
 # kubectl apply -f srcs/service.yaml
 # kubectl apply -f srcs/ingress.yaml
