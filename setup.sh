@@ -1,29 +1,32 @@
 #!/bin/sh -x
 
 # ! Minikube and dashboard start
-minikube start --driver=virtualbox
+minikube start --driver=docker
+minikube addons enable metallb
+eval $(minikube docker-env)
 gnome-terminal -- minikube dashboard
-minikube status
-kubectl version
+# minikube status
+# kubectl version
 
-# kubectl get service
-# kubectl get nodes
-# kubectl get deployments
-# kubectl get pods
+# ! MetalLB
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+kubectl apply -f srcs/configmap.yaml
 
 # ! Nginx
 docker build -t nginx srcs/nginx
 kubectl apply -f srcs/nginx/deployment.yaml
-#kubectl describe deployment nginx-deployment
+kubectl expose deploy nginx-deployment --port=80 --type=LoadBalancer#kubectl describe deployment nginx-deployment
 
 # ! MySQL
 docker build -t mysql srcs/mysql
 kubectl apply -f srcs/mysql/deployment.yaml
 #kubectl describe deployment mysql-deployment
 
-# ! Wordpress
-docker build -t wordpress srcs/wordpress
-kubectl apply -f srcs/wordpress/deployment.yaml
+# # ! Wordpress
+# docker build -t wordpress srcs/wordpress
+# kubectl apply -f srcs/wordpress/deployment.yaml
 #kubectl describe deployment nginx-deployment
 
 # kubectl apply -f srcs/service.yaml
@@ -33,3 +36,4 @@ kubectl apply -f srcs/wordpress/deployment.yaml
 # kubectl get nodes
 # kubectl get deployments
 # kubectl get pods
+# kubectl get all
