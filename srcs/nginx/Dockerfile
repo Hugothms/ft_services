@@ -6,8 +6,8 @@ RUN apk update && \
 
 COPY start_nginx_server.sh		/srcs/
 COPY nginx.conf					/etc/nginx/nginx.conf
-# COPY defaulton					/etc/nginx/sites-available/default
-COPY index.htm					/var/www/html/
+COPY default_on					/etc/nginx/sites-available/default
+COPY index.html					/var/www/html/
 
 EXPOSE 80 443
 
