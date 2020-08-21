@@ -3,7 +3,7 @@
 # ! Minikube and dashboard start
 minikube start --driver=docker
 minikube addons enable metallb
-eval $(minikube docker-env)
+eval $(minikube -p minikube docker-env)
 gnome-terminal -- minikube dashboard
 # minikube status
 # kubectl version
@@ -17,7 +17,8 @@ kubectl apply -f srcs/configmap.yaml
 # ! Nginx
 docker build -t nginx srcs/nginx
 kubectl apply -f srcs/nginx/deployment.yaml
-kubectl expose deploy nginx-deployment --port=80 --type=LoadBalancer#kubectl describe deployment nginx-deployment
+kubectl expose deploy nginx-deployment --port=80 --type=LoadBalancer
+# kubectl describe deployment nginx
 
 # ! MySQL
 docker build -t mysql srcs/mysql
@@ -27,7 +28,7 @@ kubectl apply -f srcs/mysql/deployment.yaml
 # # ! Wordpress
 # docker build -t wordpress srcs/wordpress
 # kubectl apply -f srcs/wordpress/deployment.yaml
-#kubectl describe deployment nginx-deployment
+# kubectl describe deployment wordpress-deployment
 
 # kubectl apply -f srcs/service.yaml
 # kubectl apply -f srcs/ingress.yaml
