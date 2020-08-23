@@ -1,6 +1,7 @@
 #!/bin/sh -x
 
 # ! Minikube and dashboard start
+kubectl config use-context minikube
 minikube start --driver=docker
 minikube addons enable metallb
 eval $(minikube -p minikube docker-env)
