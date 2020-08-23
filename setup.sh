@@ -16,18 +16,18 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 kubectl apply -f srcs/configmap.yaml
 
 # ! Nginx
-docker build -t nginx srcs/nginx
+docker build -t my-nginx srcs/nginx
 kubectl apply -f srcs/nginx/deployment.yaml
 kubectl expose deploy nginx-deployment --port=80 --type=LoadBalancer
 # kubectl describe deployment nginx
 
 # ! MySQL
-docker build -t mysql srcs/mysql
+docker build -t my-mysql srcs/mysql
 kubectl apply -f srcs/mysql/deployment.yaml
 #kubectl describe deployment mysql-deployment
 
 # ! Wordpress
-docker build -t wordpress srcs/wordpress
+docker build -t my-wordpress srcs/wordpress
 kubectl apply -f srcs/wordpress/deployment.yaml
 # kubectl describe deployment wordpress-deployment
 
