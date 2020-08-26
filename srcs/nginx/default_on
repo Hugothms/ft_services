@@ -6,7 +6,7 @@ server {
 
 	root /var/www/html;
 
-	index index.php index.htm index.nginx-debian.html;
+	index index.php index.htm index.html index.nginx-debian.html;
 
 	server_name _wp;
 
