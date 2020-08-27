@@ -40,3 +40,5 @@ kubectl apply -f srcs/wordpress/deployment.yaml
 # kubectl get deployments
 # kubectl get pods
 # kubectl get all
+
+
