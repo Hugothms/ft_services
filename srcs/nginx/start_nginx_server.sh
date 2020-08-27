@@ -5,6 +5,10 @@
 # /bin/bash
 
 echo "---Start Nginx---"
-service nginx start
-cd /
-/bin/bash
+# openrc
+# touch /run/openrc/softlevel
+# service nginx start
+# chown -R www-data:www-data /var/lib/nginx
+# nginx -g 'daemon off;'
+tail -f /dev/null
+# /bin/bash
