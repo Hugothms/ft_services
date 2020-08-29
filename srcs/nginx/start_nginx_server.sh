@@ -11,4 +11,4 @@ service nginx start
 # chown -R www-data:www-data /var/lib/nginx
 # nginx -g 'daemon off;'
 tail -f /dev/null
-/bin/bash
+#/bin/bash

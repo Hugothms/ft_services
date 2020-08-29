@@ -24,8 +24,8 @@ kubectl apply -f srcs/nginx/service.yaml
 # kubectl describe deployment nginx
 
 # ! MySQL
-# docker build -t my_mysql srcs/mysql
-# kubectl apply -f srcs/mysql/deployment.yaml
+docker build -t my_mysql srcs/mysql
+kubectl apply -f srcs/mysql/deployment.yaml
 #kubectl describe deployment mysql
 
 # ! Wordpress

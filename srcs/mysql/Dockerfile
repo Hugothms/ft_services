@@ -2,7 +2,7 @@ FROM alpine:latest
 
 RUN apk update && \
 	apk upgrade && \
-	apk add wget openssl bash mysql mysql-client && \
+	apk add bash openrc openssl mysql mysql-client && \
 	addgroup mysql mysql && \
 	mkdir /scripts && \
 	rm -rf /var/cache/apk/*
