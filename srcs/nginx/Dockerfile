@@ -5,10 +5,11 @@ RUN apk update && \
 	apk add nginx openrc openssl openssh bash
 
 COPY start_nginx_server.sh		/srcs/
-# COPY nginx.conf					/etc/nginx/
-# COPY default_on					/etc/nginx/sites-available/default
-COPY index.html					/var/www/html/
+COPY default_on					/etc/nginx/conf.d/default.conf
+COPY index.html					/var/www/html/lala.html
 COPY ./sshd_config				/etc/ssh/
+
+CMD ["nginx", "-g", "daemon off;"]
 
 EXPOSE 80 443 30022
 

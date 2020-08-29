@@ -11,8 +11,7 @@ spec:
   selector:
     k8s-app: nginx-ingress-lb
   type: LoadBalancer
-    # LoadBalancerIp: 172.17.0.220
-    ports: 
+  ports:
   - name: http
     port: 80
     # targetPort: 80

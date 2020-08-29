@@ -19,20 +19,20 @@ kubectl apply -f srcs/configmap.yaml
 docker build -t my_nginx srcs/nginx
 # docker images
 kubectl apply -f srcs/nginx/deployment.yaml
-kubectl expose deploy nginx-deployment --port=80 --type=LoadBalancer
+kubectl expose deploy nginx --port=80 --type=LoadBalancer
+kubectl apply -f srcs/nginx/service.yaml
 # kubectl describe deployment nginx
 
 # ! MySQL
-docker build -t my_mysql srcs/mysql
+# docker build -t my_mysql srcs/mysql
 # kubectl apply -f srcs/mysql/deployment.yaml
-#kubectl describe deployment mysql-deployment
+#kubectl describe deployment mysql
 
 # ! Wordpress
-docker build -t my_wordpress srcs/wordpress
+# docker build -t my_wordpress srcs/wordpress
 # kubectl apply -f srcs/wordpress/deployment.yaml
-# kubectl describe deployment wordpress-deployment
+# kubectl describe deployment wordpress
 
-# kubectl apply -f srcs/service.yaml
 # kubectl apply -f srcs/ingress.yaml
 
 # kubectl get service
