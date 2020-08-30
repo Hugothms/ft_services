@@ -1,7 +1,6 @@
 FROM alpine
 
 RUN apk update
-RUN	apk add bash
 RUN	apk add openrc
 RUN	apk add openssl
 RUN	apk add mysql
