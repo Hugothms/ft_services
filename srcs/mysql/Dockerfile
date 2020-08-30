@@ -1,20 +1,20 @@
 FROM alpine
 
 RUN apk update
-RUN	apk add openrc
-RUN	apk add openssl
-RUN	apk add mysql
-RUN	apk add mysql-client
+RUN	apk add mariadb
+RUN	apk add mariadb-client
 
 RUN	addgroup mysql mysql
 RUN	mkdir /scripts
 RUN	rm -rf /var/cache/apk/*
 
-COPY start_mysql_server.sh			/srcs/
-COPY init_mysql.sql					/srcs/
+COPY init_docker.sh		/
+COPY init_mysql.sql		/
 
-RUN chmod +x /srcs/start_mysql_server.sh
+RUN chmod +x /init_docker.sh
+RUN chmod +x /init_mysql.sh
 
 EXPOSE 3306
 
-ENTRYPOINT bash /srcs/start_mysql_server.sh
+CMD ./init_docker.sh
+# ENTRYPOINT bash /srcs/init_docker.sh

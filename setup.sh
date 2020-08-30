@@ -2,19 +2,20 @@
 
 # ! Minikube and dashboard start
 kubectl config use-context minikube
+echo "Starting minikube..."
 minikube start --driver=docker --extra-config=apiserver.service-node-port-range=1-35000
+echo "Enabling addons..."
 minikube addons enable metallb
 minikube addons enable dashboard
-eval $(minikube -p minikube docker-env)
+echo "Launching dashboard..."
 # gnome-terminal -- minikube dashboard
 minikube dashboard &
 
 echo "Eval..."
+# eval $(minikube -p minikube docker-env)
 eval $(minikube docker-env)
-# minikube status
-# kubectl version
-
-IP=$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)
+# IP=$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)
+IP=$(minikube ip)
 printf "Minikube IP: ${IP}"
 
 # ! MetalLB
@@ -25,28 +26,28 @@ kubectl apply -f srcs/configmap.yaml
 
 # ! Nginx
 docker build -t my_nginx srcs/nginx
-# docker images
-kubectl apply -f srcs/nginx/deployment.yaml
 kubectl expose deploy nginx --port=80 --type=LoadBalancer
-kubectl apply -f srcs/nginx/service.yaml
-# kubectl describe deployment nginx
 
 # ! MySQL
 # docker build -t my_mysql srcs/mysql
-# kubectl apply -f srcs/mysql/deployment.yaml
-#kubectl describe deployment mysql
 
 # ! Wordpress
 # docker build -t my_wordpress srcs/wordpress
-# kubectl apply -f srcs/wordpress/deployment.yaml
-# kubectl describe deployment wordpress
 
-# kubectl apply -f srcs/ingress.yaml
+echo "Creating pods and services..."
+kubectl create -f ./srcs/
 
+echo "Opening the network in your browser"
+firefox http://$IP
+
+# ! Get infos
+# docker images
 # kubectl get service
 # kubectl get nodes
 # kubectl get deployments
 # kubectl get pods
 # kubectl get all
-
+# minikube status
+# kubectl version
+# kubectl describe deployment nginx
 
