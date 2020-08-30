@@ -2,8 +2,9 @@
 
 # ! Minikube and dashboard start
 kubectl config use-context minikube
-minikube start --driver=docker
+minikube start --driver=docker --extra-config=apiserver.service-node-port-range=1-35000
 minikube addons enable metallb
+minikube addons enable dashboard
 eval $(minikube -p minikube docker-env)
 # gnome-terminal -- minikube dashboard
 minikube dashboard &
@@ -28,8 +29,8 @@ kubectl apply -f srcs/nginx/service.yaml
 # kubectl describe deployment nginx
 
 # ! MySQL
-docker build -t my_mysql srcs/mysql
-kubectl apply -f srcs/mysql/deployment.yaml
+# docker build -t my_mysql srcs/mysql
+# kubectl apply -f srcs/mysql/deployment.yaml
 #kubectl describe deployment mysql
 
 # ! Wordpress

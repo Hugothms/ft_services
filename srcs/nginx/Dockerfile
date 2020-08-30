@@ -13,9 +13,8 @@ RUN chown -R www:www /var/lib/nginx
 RUN mkdir -p /run/nginx
 
 COPY nginx.conf		/etc/nginx/nginx.conf
-#COPY default_on		/etc/nginx/conf.d/default.conf
 COPY index.html		/www/index.html
-#COPY ./sshd_config	/etc/ssh/
+COPY script.js		/www/script.js
 
 # Create SSH user and SSL key
 RUN adduser -D user
