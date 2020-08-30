@@ -6,6 +6,10 @@ minikube start --driver=docker
 minikube addons enable metallb
 eval $(minikube -p minikube docker-env)
 gnome-terminal -- minikube dashboard
+minikube dashboard &
+
+echo "Eval..."
+eval $(minikube docker-env)
 # minikube status
 # kubectl version
 

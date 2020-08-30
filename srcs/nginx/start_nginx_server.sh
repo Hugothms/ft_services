@@ -7,8 +7,6 @@
 echo "---Start Nginx---"
 openrc
 touch /run/openrc/softlevel
-service nginx start
 # chown -R www-data:www-data /var/lib/nginx
-# nginx -g 'daemon off;'
-tail -f /dev/null
+nginx -g 'daemon off;'
 #/bin/bash

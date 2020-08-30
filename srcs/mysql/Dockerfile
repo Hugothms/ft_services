@@ -1,11 +1,15 @@
-FROM alpine:latest
+FROM alpine
 
-RUN apk update && \
-	apk upgrade && \
-	apk add bash openrc openssl mysql mysql-client && \
-	addgroup mysql mysql && \
-	mkdir /scripts && \
-	rm -rf /var/cache/apk/*
+RUN apk update
+RUN	apk add bash
+RUN	apk add openrc
+RUN	apk add openssl
+RUN	apk add mysql
+RUN	apk add mysql-client
+
+RUN	addgroup mysql mysql
+RUN	mkdir /scripts
+RUN	rm -rf /var/cache/apk/*
 
 COPY start_mysql_server.sh			/srcs/
 COPY init_mysql.sql					/srcs/
