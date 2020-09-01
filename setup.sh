@@ -26,10 +26,10 @@ kubectl apply -f srcs/configmap.yaml
 
 # ! Nginx
 docker build -t my_nginx srcs/nginx
-kubectl expose deploy nginx --port=80 --type=LoadBalancer
+# kubectl expose deploy nginx --port=80 --type=LoadBalancer
 
 # ! MySQL
-# docker build -t my_mysql srcs/mysql
+docker build -t my_mysql srcs/mysql
 
 # ! Wordpress
 # docker build -t my_wordpress srcs/wordpress
@@ -37,8 +37,8 @@ kubectl expose deploy nginx --port=80 --type=LoadBalancer
 echo "Creating pods and services..."
 kubectl create -f ./srcs/
 
-echo "Opening the network in your browser"
-firefox http://$IP
+# echo "Opening the network in your browser"
+# firefox http://$IP
 
 # ! Get infos
 # docker images

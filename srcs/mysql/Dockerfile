@@ -9,7 +9,7 @@ RUN	mkdir /scripts
 RUN	rm -rf /var/cache/apk/*
 
 COPY init_docker.sh		/
-COPY init_mysql.sql		/
+COPY init_mysql.sh		/
 
 RUN chmod +x /init_docker.sh
 RUN chmod +x /init_mysql.sh
