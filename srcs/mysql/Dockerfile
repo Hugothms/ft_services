@@ -3,18 +3,22 @@ FROM alpine
 RUN apk update
 RUN	apk add mariadb
 RUN	apk add mariadb-client
+RUN apk add telegraf --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
 
 RUN	addgroup mysql mysql
 RUN	mkdir /scripts
 RUN	rm -rf /var/cache/apk/*
 
-COPY init_docker.sh		/
+COPY start.sh		/
 COPY init_mysql.sh		/
 
-RUN chmod +x /init_docker.sh
+RUN mkdir -p /etc/telegraf
+COPY ./telegraf.conf /etc/telegraf/telegraf.conf
+
+RUN chmod +x /start.sh
 RUN chmod +x /init_mysql.sh
 
 EXPOSE 3306
 
-CMD ./init_docker.sh
-# ENTRYPOINT bash /srcs/init_docker.sh
+CMD ./start.sh
+# ENTRYPOINT bash /srcs/start.sh

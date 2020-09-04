@@ -17,7 +17,6 @@ COPY nginx.conf		/etc/nginx/nginx.conf
 COPY index.html		/www/index.html
 COPY script.js		/www/script.js
 
-# Telegraf setup
 RUN mkdir -p /etc/telegraf
 COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 
@@ -27,12 +26,11 @@ RUN echo "user:password"|chpasswd
 RUN ssh-keygen -A
 RUN yes "" | openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
 
-COPY start.sh		/start.sh
-RUN chmod +x /start.sh
-CMD sh ./start.sh
-
 EXPOSE 80
 EXPOSE 443
 # EXPOSE 80 443 30022
 
+COPY start.sh		/start.sh
+RUN chmod +x /start.sh
+CMD sh ./start.sh
 # ENTRYPOINT /start.sh
