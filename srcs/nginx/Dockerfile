@@ -5,6 +5,7 @@ RUN	apk add openrc --no-cache
 RUN	apk add openssl
 RUN	apk add nginx
 RUN	apk add openssh
+RUN apk add telegraf --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
 
 RUN adduser -D -g 'www' www
 RUN mkdir /www
@@ -15,6 +16,10 @@ RUN mkdir -p /run/nginx
 COPY nginx.conf		/etc/nginx/nginx.conf
 COPY index.html		/www/index.html
 COPY script.js		/www/script.js
+
+# Telegraf setup
+RUN mkdir -p /etc/telegraf
+COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 
 # Create SSH user and SSL key
 RUN adduser -D user
