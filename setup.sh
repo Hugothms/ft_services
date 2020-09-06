@@ -36,7 +36,7 @@ docker build -t my_mysql srcs/mysql
 
 echo "Creating pods and services..."
 kubectl create -f ./srcs/
-
+kubectl expose deploy nginx --port=80 --type=LoadBalancer
 # echo "Opening the network in your browser"
 # firefox http://$IP
 
