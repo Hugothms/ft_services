@@ -16,5 +16,5 @@ spec:
       - name: wordpress
         image: my_wordpress:latest
         imagePullPolicy: Never
-        ports:
-        - containerPort: 5050
+        # ports:
+        # - containerPort: 5050

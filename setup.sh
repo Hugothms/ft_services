@@ -32,11 +32,11 @@ docker build -t my_nginx srcs/nginx
 docker build -t my_mysql srcs/mysql
 
 # ! Wordpress
-# docker build -t my_wordpress srcs/wordpress
+docker build -t my_wordpress srcs/wordpress
 
 echo "Creating pods and services..."
 kubectl create -f ./srcs/
-kubectl expose deploy nginx --port=80 --type=LoadBalancer
+# kubectl expose deploy nginx --port=80 --type=LoadBalancer
 # echo "Opening the network in your browser"
 # firefox http://$IP
 

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: nginx
   ports:
@@ -13,10 +13,10 @@ spec:
     name: http
   - port: 443
     name: https
-  - port: 22
-    nodePort: 22
-    targetPort: 22
-    name: ssh
+  # - port: 22
+  #   nodePort: 22
+  #   targetPort: 22
+  #   name: ssh
 
 ---
 
