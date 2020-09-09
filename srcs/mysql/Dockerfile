@@ -1,13 +1,12 @@
 FROM alpine
 
 RUN apk update
-RUN	apk add mariadb
+RUN	apk add mariadb openrc openssl
 RUN	apk add mariadb-client
 RUN	apk add mysql
 RUN apk add telegraf --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
 
 RUN	addgroup mysql mysql
-RUN	mkdir /scripts
 RUN	rm -rf /var/cache/apk/*
 
 COPY start.sh			/

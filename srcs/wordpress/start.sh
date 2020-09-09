@@ -9,5 +9,5 @@ echo "---Start PHP---"
 php-fpm7 -g 'daemon off;'
 
 # tail -f /dev/null
-cd /
-sh
+# cd /
+# sh
