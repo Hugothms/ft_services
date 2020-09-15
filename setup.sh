@@ -1,9 +1,10 @@
 #!/bin/sh -x
 
 # ! Minikube and dashboard start
+# service docker start
 kubectl config use-context minikube
 echo "Starting minikube..."
-minikube start --driver=docker --extra-config=apiserver.service-node-port-range=1-35000
+minikube start --driver=docker --extra-config=apiserver.service-node-port-range=1-35000 #--vm-driver=docker
 echo "Enabling addons..."
 minikube addons enable metallb
 minikube addons enable dashboard
