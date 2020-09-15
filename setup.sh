@@ -14,6 +14,7 @@ fi
 eval $(minikube docker-env)
 echo "Enabling addons..."
 minikube addons enable metallb
+minikube addons enable metrics-server
 minikube addons enable dashboard
 
 echo "Launching dashboard..."
@@ -33,13 +34,14 @@ then
 else
 	kubectl apply -f srcs/configmap.yaml
 fi
+
 echo "Building Images"
 docker build -t my_nginx		srcs/nginx
 docker build -t my_mysql		srcs/mysql
 docker build -t my_wordpress	srcs/wordpress
 
 echo "Creating pods and services..."
-kubectl create -f ./srcs/
+kubectl apply -f ./srcs/
 # kubectl expose deploy nginx --port=80 --type=LoadBalancer
 # echo "Opening the network in your browser"
 # firefox http://$IP

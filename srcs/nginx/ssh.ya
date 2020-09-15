@@ -11,4 +11,3 @@ spec:
       port: 30022
       nodePort: 30022
       protocol: TCP
-  

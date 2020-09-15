@@ -20,5 +20,5 @@ RUN chmod +x /init_mysql.sh
 
 EXPOSE 3306
 
-# CMD ./start.sh
-ENTRYPOINT sh /start.sh
+CMD ./start.sh
+# ENTRYPOINT sh /start.sh
