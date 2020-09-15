@@ -1,17 +1,17 @@
 #!/bin/sh -x
 
 # service docker start
-kubectl config use-context minikube
+# kubectl config use-context minikube
 echo "Starting Minikube..."
-if [$1 = 42]
+if [ $1 = '42' ]
 then
 	minikube start --driver=virtualbox
 else
 	minikube start --driver=docker --extra-config=apiserver.service-node-port-range=1-35000
 	# eval $(minikube -p minikube docker-env)
-	eval $(minikube docker-env)
 fi
 
+eval $(minikube docker-env)
 echo "Enabling addons..."
 minikube addons enable metallb
 minikube addons enable dashboard
