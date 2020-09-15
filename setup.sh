@@ -27,8 +27,12 @@ echo "Starting MetalLB"
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
 kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-kubectl apply -f srcs/configmap.yaml
-
+if [ $1 = '42' ]
+then
+	kubectl apply -f srcs/configmap-mac.yaml
+else
+	kubectl apply -f srcs/configmap.yaml
+fi
 echo "Building Images"
 docker build -t my_nginx		srcs/nginx
 docker build -t my_mysql		srcs/mysql
