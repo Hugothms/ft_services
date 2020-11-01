@@ -9,4 +9,6 @@ COPY entrypoint /entrypoint
 RUN mkdir /app
 
 EXPOSE 3306
-CMD sh /entrypoint
+
+CMD ./start.sh
+# ENTRYPOINT sh /start.sh

@@ -10,4 +10,3 @@ data:
       protocol: layer2
       addresses:
       - 172.17.0.220-172.17.0.250
-      
