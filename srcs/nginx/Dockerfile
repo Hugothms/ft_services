@@ -13,12 +13,12 @@ RUN chown -R www:www /www
 RUN chown -R www:www /var/lib/nginx
 RUN mkdir -p /run/nginx
 
-COPY nginx.conf		/etc/nginx/nginx.conf
-COPY index.html		/www/index.html
-COPY script.js		/www/script.js
+COPY nginx.conf		/etc/nginx/
+COPY index.html		/www/
+COPY script.js		/www/
 
-RUN mkdir -p /etc/telegraf
-COPY ./telegraf.conf /etc/telegraf/telegraf.conf
+RUN mkdir -p		/etc/telegraf
+COPY telegraf.conf	/etc/telegraf/
 
 # Create SSH user and SSL key
 RUN adduser -D user
@@ -30,7 +30,7 @@ EXPOSE 80
 EXPOSE 443
 # EXPOSE 80 443 30022
 
-COPY start.sh		/start.sh
+COPY start.sh		/
 RUN chmod +x /start.sh
-CMD sh ./start.sh
+CMD sh start.sh
 # ENTRYPOINT /start.sh

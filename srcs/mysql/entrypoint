@@ -1,0 +1,12 @@
+#!/bin/sh
+mysql_install_db --user=root > /dev/null
+mkdir -p /run/mysqld
+
+tfile=`mktemp`
+cat << EOF > $tfile
+FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY "$MYSQL_ROOT_PASSWORD" WITH GRANT OPTION;
+EOF
+rm -f $tfile
+
+exec /usr/bin/mysqld --user=root --console
