@@ -1,14 +1,18 @@
-FROM alpine
+FROM alpine:latest
 
-RUN apk add --update mysql mysql-client && \
-	rm -f /var/cache/apk/*
+RUN apk -U upgrade
 
-COPY my.cnf /etc/mysql/my.cnf
-COPY entrypoint /entrypoint
+RUN apk add vim mysql mysql-client
 
-RUN mkdir /app
+RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.3_linux_amd64.tar.gz
+RUN mkdir -p /etc/telegraf
+COPY telegraf.conf /etc/telegraf/telegraf.conf
+
+COPY my.cnf /etc/
+COPY start.sh .
+
+COPY init.sql .
 
 EXPOSE 3306
 
-CMD ./start.sh
-# ENTRYPOINT sh /start.sh
+CMD /bin/sh /start.sh

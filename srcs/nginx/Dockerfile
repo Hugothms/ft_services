@@ -1,36 +1,33 @@
-FROM alpine
+FROM alpine:latest
 
-RUN apk update
-RUN	apk add openrc --no-cache
-RUN	apk add openssl
-RUN	apk add nginx
-RUN	apk add openssh
-RUN apk add telegraf --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
+# Install nginx and its dependencies
+RUN apk update && apk add nginx \
+&& apk add --no-cache --upgrade bash \
+&& apk add openssl && mkdir -p var/run/nginx \
+&& apk add openssl openssh \
+&& rm -rf /var/cache/apk/*
 
-RUN adduser -D -g 'www' www
-RUN mkdir /www
-RUN chown -R www:www /www
-RUN chown -R www:www /var/lib/nginx
-RUN mkdir -p /run/nginx
+# Install telegraf
+RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.3_linux_amd64.tar.gz
 
-COPY nginx.conf		/etc/nginx/
+RUN mkdir -p /www
 COPY index.html		/www/
-COPY script.js		/www/
+COPY telegraf.conf /etc/telegraf/
 
-RUN mkdir -p		/etc/telegraf
-COPY telegraf.conf	/etc/telegraf/
+# SSL Key
+RUN mkdir -p /etc/nginx/ssl && openssl req -newkey rsa:2048 -x509 -days 365 -nodes -keyout /etc/nginx/ssl/services.key -out /etc/nginx/ssl/services.pem -subj "/C=FR/ST=Paris/L=Paris/O=42, Inc./OU=hthomas/CN=www.localhost"
 
-# Create SSH user and SSL key
-RUN adduser -D user
-RUN echo "user:password"|chpasswd
-RUN ssh-keygen -A
-RUN yes "" | openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/localhost.key -out /etc/ssl/certs/localhost.crt
+RUN usr/bin/ssh-keygen -A
 
-EXPOSE 80
-EXPOSE 443
-# EXPOSE 80 443 30022
+# Nginx config
+RUN rm /etc/nginx/nginx.conf
+COPY nginx.conf	/etc/nginx/
 
-COPY start.sh		/
-RUN chmod +x /start.sh
-CMD sh start.sh
-# ENTRYPOINT /start.sh
+RUN echo 'Welcome to ft_services' > /etc/motd
+
+COPY setup.sh .
+
+RUN chmod +x setup.sh
+
+EXPOSE 80 443
+CMD ./setup.sh
