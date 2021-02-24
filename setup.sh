@@ -65,10 +65,8 @@ start_service()
 
 start_services()
 {
-	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
 	for service in $services
 	do
-		printf"hellooooooooo wooooooorld $service"
 		start_service $service
 	done
 }
