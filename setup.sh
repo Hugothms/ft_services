@@ -1,4 +1,4 @@
-services="nginx ftps grafana mysql influxdb wordpress"
+services="nginx mysql wordpress phpmyadmin grafana influxdb ftps"
 OS="`uname`"
 
 start_minikube()
@@ -95,28 +95,29 @@ start()
 	start_end
 }
 
+delete()
+{
+	minikube delete
+}
+
 restart()
 {
-	if [ $1 = "" ]
+	if [ -n $1 ]
 	then
-		printf "\n\e[33;1m restart: '$1': no such service!\n\e[0m"
+		delete
+		start
 	else
 		kubectl delete -f srcs/yaml/$1.yaml
 		start_service $1
 	fi
 }
 
-delete()
-{
-	minikube delete
-}
-
-if [ $1 = "start" ] || [ $1 = "" ]
-then
-	start
-elif [ $1 = "restart" ]
+if [ -n $1 ] || [ $1 = "restart" ]
 then
 	restart $2
+elif [ $1 = "start" ]
+then
+	start
 elif [ $1 = "delete" ]
 then
 	delete $2
