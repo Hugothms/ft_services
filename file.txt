@@ -1,0 +1,13 @@
+Welcome on hthomas' FT_SERVICES
+
+wordpress
+admin/admin
+
+phpmyadmin
+root/root
+
+grafana
+admin/admin
+
+ftps:
+hthomas/password
