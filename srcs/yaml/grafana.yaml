@@ -5,7 +5,7 @@ kind: Service
 metadata:
   name: grafana-service
   annotations:
-    metallb.universe.tf/allow-shared-ip: test
+    metallb.universe.tf/allow-shared-ip: shared
 spec:
   selector:
     app: grafana

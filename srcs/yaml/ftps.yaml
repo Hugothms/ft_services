@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: ftps-service
   annotations:
-    metallb.universe.tf/allow-shared-ip: test
+    metallb.universe.tf/allow-shared-ip: shared
 spec:
   type: LoadBalancer
   ports:
