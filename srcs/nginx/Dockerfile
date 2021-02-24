@@ -6,9 +6,9 @@ RUN apk update && apk add nginx \
 && apk add openssl && mkdir -p var/run/nginx \
 && apk add openssl openssh \
 && rm -rf /var/cache/apk/*
-
+RUN apk add --no-cache telegraf --repository=http://nl.alpinelinux.org/alpine/edge/testing
 # Install telegraf
-RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.3_linux_amd64.tar.gz
+# RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.3_linux_amd64.tar.gz
 
 
 # SSL Key

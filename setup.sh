@@ -1,58 +1,123 @@
-echo "Cleaning Minikube"
-minikube delete
+services="nginx ftps grafana mysql influxdb wordpress"
+OS="`uname`"
 
-#Detect the platform
-OS="uname"
-echo "Starting Minikube"
-#Change settings depending on the platform
-minikube start --vm-driver=docker #--extra-config=apiserver.service-node-port-range=1-35000
-CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
-sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+start_minikube()
+{
+	minikube start --vm-driver=docker #--extra-config=apiserver.service-node-port-range=1-35000
+	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
+	#Change settings depending on the platform
+	case $OS in
+		"Linux")
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+		;;
+		"Darwin")
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+		;;
+	));;
+	esac
+	# echo "Minikube IP: ${CLUSTER_IP}"
+	eval $(minikube docker-env)
 
-echo "Minikube IP: ${CLUSTER_IP}"
-eval $(minikube docker-env)
+	# echo "Enabling addons..."
+	minikube addons enable metrics-server
+	minikube addons enable dashboard
+	minikube addons enable metallb
 
-echo "Enabling addons"
-minikube addons enable metrics-server
-minikube addons enable dashboard
-minikube addons enable metallb
+	# echo "Launching dashboard..."
+	minikube dashboard &
 
-echo "Launching dashboard"
-minikube dashboard &
+	# echo "MetalLB Config"
+	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+	kubectl apply -f srcs/yaml/metallb-configmap.yaml
 
-echo "MetalLB Config"
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-kubectl apply -f srcs/yaml/metallb-configmap.yaml
+	# echo "Creating Persistent Volumes"
+	kubectl apply -f srcs/yaml/mysqlvol.yaml
+	kubectl apply -f srcs/yaml/influxdbvol.yaml
+}
 
-echo "Creating Persistent Volumes"
-kubectl apply -f srcs/yaml/mysqlvol.yaml
-kubectl apply -f srcs/yaml/influxdbvol.yaml
 
-echo "Building Images then Creating Pods and Services"
-docker build -t nginx_i srcs/nginx/.
-kubectl apply -f srcs/yaml/nginx.yaml
+build_docker_image()
+{
+	docker build -t $1_i srcs/$1/.
+}
 
-docker build -t mysql_i srcs/mysql/.
-kubectl apply -f srcs/yaml/mysql.yaml
+apply_yaml()
+{
+	kubectl apply -f srcs/yaml/$1.yaml
+}
 
-docker build -t phpmyadmin_i srcs/phpmyadmin/.
-kubectl apply -f srcs/yaml/phpmyadmin.yaml
+start_service()
+{
+	if [ $1 = "ftps" ]
+	then
+		docker build -t service_$1 srcs/$1 --build-arg IP=${CLUSTER_IP}
+	else
+		build_docker_image $1
+	fi
+	apply_yaml $1
+}
 
-docker build -t wordpress_i srcs/wordpress/.
-kubectl apply -f srcs/yaml/wordpress.yaml
+start_services()
+{
+	for service in $services
+	do
+		start_service $service
+	done
+}
 
-docker build -t service_ftps --build-arg IP=${CLUSTER_IP} srcs/ftps
-kubectl apply -f srcs/yaml/ftps.yaml
+start_end()
+{
+	#Initialize database
+	kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
 
-docker build -t influxdb_i srcs/influxdb/.
-kubectl apply -f srcs/yaml/influxdb.yaml
+	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
+	case $OS in
+		"Linux")
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+		;;
+		"Darwin")
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+		;;
+	*);;
+	esac
+}
 
-docker build -t grafana_i srcs/grafana/.
-kubectl apply -f srcs/yaml/grafana.yaml
+start()
+{
+	start_minikube
+	start_services
+	start_end
+}
 
-kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
-sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+restart()
+{
+	if [ $1 = "" ]
+	then
+		printf "\n\e[33;1m restart: '$1': no such service!\n\e[0m"
+	else
+		kubectl delete -f srcs/yaml/$1.yaml
+		start_service $1
+	fi
+}
+
+delete()
+{
+	minikube delete
+}
+
+if [ $1 = "start" ] || [ $1 = "" ]
+then
+	start
+elif [ $1 = "restart" ]
+then
+	restart $2
+elif [ $1 = "delete" ]
+then
+	delete $2
+fi
