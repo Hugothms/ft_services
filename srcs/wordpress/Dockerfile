@@ -2,6 +2,9 @@ FROM alpine:latest
 
 RUN	apk update && apk add nginx openrc openssl openssh && apk add wget
 
+RUN apk add --no-cache telegraf --repository=http://nl.alpinelinux.org/alpine/edge/testing
+RUN mkdir -p /etc/telegraf
+COPY telegraf.conf		/etc/telegraf/
 
 RUN apk update \
 	&& apk add php7 php7-fpm php7-opcache \
@@ -21,16 +24,12 @@ RUN wget http://wordpress.org/latest.tar.gz \
 RUN mkdir -p /var/run/nginx
 RUN mkdir /var/run/php
 RUN rm /etc/nginx/conf.d/default.conf
-COPY ./default.conf /etc/nginx/conf.d/default.conf
-COPY ./wp-config.php /wordpress/wp-config.php
+COPY default.conf /etc/nginx/conf.d/default.conf
+COPY wp-config.php /wordpress/wp-config.php
 
-RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.16.3_linux_amd64.tar.gz
-RUN mkdir -p /etc/telegraf
-COPY ./telegraf.conf /etc/telegraf/telegraf.conf
-
-ADD ./start.sh ./start.sh
-RUN chmod +x ./start.sh
+ADD start.sh start.sh
+RUN chmod +x start.sh
 
 EXPOSE 5050
 
-CMD ["sh", "./start.sh"]
+CMD /bin/sh start.sh
