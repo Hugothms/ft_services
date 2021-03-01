@@ -3,7 +3,7 @@ kind: Service
 metadata:
   annotations:
     metallb.universe.tf/allow-shared-ip: shared
-  name: phpmyadmin
+  name: phpmyadmin-service
 spec:
   selector:
     app: phpmyadmin
