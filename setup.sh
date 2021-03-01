@@ -56,7 +56,7 @@ start_service()
 {
 	if [ $1 = "ftps" ]
 	then
-		docker build -t service_$1 srcs/$1 --build-arg IP=${CLUSTER_IP}
+		docker build -t $1_i srcs/$1 --build-arg IP=${CLUSTER_IP}
 	else
 		build_docker_image $1
 	fi

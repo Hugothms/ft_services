@@ -10,4 +10,4 @@ grafana
 admin/admin
 
 ftps:
-hthomas/password
+admin/admin

@@ -1,3 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,23 +42,3 @@ spec:
         - containerPort: 443
           name: https
         imagePullPolicy: Never
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: shared
-  name: nginx-service
-spec:
-  selector:
-    app: nginx
-  type: LoadBalancer
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 80
-    - name: https
-      protocol: TCP
-      port: 443
-      targetPort: 443

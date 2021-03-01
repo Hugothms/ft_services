@@ -1,11 +1,11 @@
 #!/bin/sh
 
-USER=user
-PASSWORD=user
+USER=admin
+PASSWORD=admin
 FOLDER="/ftp"
 ADDR=$(cat ip)
 
-echo -e "$PASSWORD\n$PASSWORD" | adduser -h $FOLDER -s /sbin/nologin -u 1000 $USER
+echo -e "$USER\n$PASSWORD" | adduser -h $FOLDER -s /sbin/nologin -u 1000 $USER
 
 chown $USER:$USER $FOLDER
 mkdir -p $FOLDER

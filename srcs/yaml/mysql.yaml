@@ -50,4 +50,3 @@ spec:
       - name: mysql
         persistentVolumeClaim:
           claimName: mysql
-

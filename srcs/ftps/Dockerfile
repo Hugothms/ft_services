@@ -8,11 +8,12 @@ COPY telegraf.conf		/etc/telegraf/
 ARG IP
 RUN echo $IP > ip
 
+RUN mkdir -p /etc/ssl/private
+# RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -subj "/C=FR/ST=Paris/O=21/OU=hthomas/CN=www.localhost" -out /etc/ssl/certs/vsftpd.crt
 RUN openssl req -x509 -nodes -days 7300 -subj "/C=FR/ST=Paris/O=21/OU=hthomas/CN=www.localhost" -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt
 
 COPY vsftpd.conf	/etc/vsftpd/
 COPY start.sh		.
-
 
 EXPOSE 21 30000
 
