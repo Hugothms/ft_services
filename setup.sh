@@ -1,6 +1,21 @@
 services="nginx mysql wordpress phpmyadmin grafana influxdb ftps"
 OS="`uname`"
 
+init()
+{
+	if [ $1 = 'full' ]
+	then
+		brew install kubectl
+		brew install minikube
+	fi
+	sh ~hthomas/42/42toolbox/init_docker.sh
+	sleep 60
+	minikube config set vm-driver virtualbox
+	minikube delete
+	docker-machine create --driver virtualbox default
+	docker-machine start
+}
+
 start_minikube()
 {
 	minikube start --vm-driver=docker #--extra-config=apiserver.service-node-port-range=1-35000
@@ -100,6 +115,18 @@ delete()
 	minikube delete
 }
 
+delete_all()
+{
+	kubectl delete --all ingresses
+	kubectl delete --all deployments
+	kubectl delete --all pods
+	kubectl delete --all services
+	kubectl delete --all pvc
+	kubectl delete namespaces metallb-system
+	docker system prune
+	docker rmi $(docker images -a -q)
+}
+
 restart()
 {
 	if [ -n $1 ]
@@ -112,13 +139,12 @@ restart()
 	fi
 }
 
-if [ -n $1 ] || [ $1 = "restart" ]
-then
-	restart $2
-elif [ $1 = "start" ]
+if [ $1 = "start" ]
 then
 	start
 elif [ $1 = "delete" ]
 then
 	delete $2
+else
+	restart $2
 fi
