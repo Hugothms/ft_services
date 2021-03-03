@@ -1,15 +1,19 @@
 #!/bin/sh
 
-USER=admin
-PASSWORD=admin
+USER=ftp
+PASSWORD=alpineftp
 FOLDER="/ftp"
 ADDR=$(cat ip)
 
-echo -e "$USER\n$PASSWORD" | adduser -h $FOLDER -s /sbin/nologin -u 1000 $USER
+echo -e "$PASSWORD\n$PASSWORD" | adduser -h $FOLDER -s /sbin/nologin -u 1000 $USER
 
+# mkdir -p $FOLDER
 chown $USER:$USER $FOLDER
-mkdir -p $FOLDER
+# grep '/ftp/' /etc/passwd | cut -d':' -f1 | xargs -n1 deluser
 unset USER PASSWORD FOLDER UID
+
+# echo "set ssl:verify-certificate no" >> ~/.lftp/rc
 
 telegraf &
 exec /usr/sbin/vsftpd -opasv_address=$ADDR /etc/vsftpd/vsftpd.conf
+sh
