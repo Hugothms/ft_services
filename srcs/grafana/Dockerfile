@@ -12,7 +12,7 @@ RUN wget --output-file=grafana.tar.gz https://dl.grafana.com/oss/release/grafana
 RUN tar -zxvf grafana-7.3.4.linux-amd64.tar.gz
 RUN mv grafana-7.3.4 grafana
 RUN rm grafana.tar.gz
-COPY file.db grafana/data/grafana.db
+COPY grafana.db grafana/data/grafana.db
 
 COPY start.sh	start.sh
 RUN chmod +x	start.sh
