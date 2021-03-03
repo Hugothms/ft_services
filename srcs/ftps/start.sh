@@ -17,3 +17,6 @@ unset USER PASSWORD FOLDER UID
 telegraf &
 exec /usr/sbin/vsftpd -opasv_address=$ADDR /etc/vsftpd/vsftpd.conf
 sh
+
+# set ssl:verify-certificate no
+# lftp -d -u ftp,alpineftp 192.168.49.2 
