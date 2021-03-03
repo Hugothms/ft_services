@@ -3,8 +3,7 @@ OS="`uname`"
 
 init()
 {
-	if [ $1 = 'full' ]
-	then
+	if [ $1 = 'full' ] then
 		brew install kubectl
 		brew install minikube
 	fi
@@ -32,7 +31,7 @@ start_minikube()
 			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
 			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
 			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftp/Dockerfile
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
 		;;
 	));;
 	esac
@@ -71,8 +70,7 @@ apply_yaml()
 
 start_service()
 {
-	if [ $1 = "ftps" ]
-	then
+	if [ $1 = "ftps" ] then
 		docker build -t $1_i srcs/$1 --build-arg IP=${CLUSTER_IP}
 	else
 		build_docker_image $1
@@ -120,14 +118,13 @@ delete_all()
 	kubectl delete --all services
 	kubectl delete --all pvc
 	kubectl delete namespaces metallb-system
-	docker system prune
+	docker system prune -y
 	docker rmi $(docker images -a -q)
 }
 
 delete()
 {
-	if [ $1 = "all" ]
-	then
+	if [ $1 = "all" ] then
 		delete_all
 	else
 		minikube delete
@@ -136,8 +133,7 @@ delete()
 
 restart()
 {
-	if [ -n $1 ]
-	then
+	if [ -n $1 ] then
 		delete
 		start
 	else
@@ -146,11 +142,9 @@ restart()
 	fi
 }
 
-if [ $1 = "start" ]
-then
+if [ $1 = "start" ] then
 	start
-elif [ $1 = "delete" ]
-then
+elif [ $1 = "delete" ] then
 	delete $2
 else
 	restart $2
