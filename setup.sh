@@ -25,7 +25,7 @@ start_minikube()
 			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
 			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
 			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftp/Dockerfile
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
 		;;
 		"Darwin")
 			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
