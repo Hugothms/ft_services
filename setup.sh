@@ -112,11 +112,6 @@ start()
 	start_end
 }
 
-delete()
-{
-	minikube delete
-}
-
 delete_all()
 {
 	kubectl delete --all ingresses
@@ -127,6 +122,16 @@ delete_all()
 	kubectl delete namespaces metallb-system
 	docker system prune
 	docker rmi $(docker images -a -q)
+}
+
+delete()
+{
+	if [ $1 = "all" ]
+	then
+		delete_all
+	else
+		minikube delete
+	fi
 }
 
 restart()
