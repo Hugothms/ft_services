@@ -1,6 +1,22 @@
 services="nginx mysql wordpress phpmyadmin grafana influxdb ftps"
 OS="`uname`"
 
+is_a_service()
+{
+	if [ "$#" -eq 0  ]; then
+			echo 0
+			exit
+	fi
+	for service in $services
+	do
+		if [ service = $1 ]; then
+			echo 1
+			exit
+		fi
+	done
+	echo 0
+}
+
 init()
 {
 	if [ $1 = 'full' ]; then
@@ -138,9 +154,11 @@ restart()
 	if [ "$#" -eq 0 ]; then
 		delete
 		start
-	else
+	elif [ $(is_a_service) -eq 1 ]; then
 		kubectl delete -f srcs/yaml/$1.yaml
 		start_service $1
+	else
+		printf "Not such service: %s\n" $1
 	fi
 }
 
