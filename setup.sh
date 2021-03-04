@@ -22,16 +22,16 @@ start_minikube()
 	#Change settings depending on the platform
 	case $OS in
 		"Linux")
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
 		;;
 		"Darwin")
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
 		;;
 	));;
 	esac
@@ -91,16 +91,16 @@ start_end()
 	#Initialize database
 	kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
 
-	# CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-	# case $OS in
-	# 	"Linux")
-	# 		sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
-	# 	;;
-	# 	"Darwin")
-	# 		sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
-	# 	;;
-	# *);;
-	# esac
+	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
+	case $OS in
+		"Linux")
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" ./setup.sh
+		;;
+		"Darwin")
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" ./setup.sh
+		;;
+	*);;
+	esac
 }
 
 start()
@@ -118,13 +118,15 @@ delete_all()
 	kubectl delete --all services
 	kubectl delete --all pvc
 	kubectl delete namespaces metallb-system
-	docker system prune
 	docker rmi $(docker images -a -q)
+	docker system prune -f
 }
 
 delete()
 {
-	if [ $1 = "all" ]; then
+	if [ "$#" -eq 0 ]; then
+		minikube delete
+	elif [ $1 = "all" ]; then
 		delete_all
 	else
 		minikube delete
@@ -133,7 +135,7 @@ delete()
 
 restart()
 {
-	if [ -n $1 ]; then
+	if [ "$#" -eq 0 ]; then
 		delete
 		start
 	else
@@ -142,7 +144,9 @@ restart()
 	fi
 }
 
-if [ $1 = "start" ]; then
+if [ "$#" -eq 0 ]; then
+	restart
+elif [ $1 = "start" ]; then
 	start
 elif [ $1 = "delete" ]; then
 	delete $2

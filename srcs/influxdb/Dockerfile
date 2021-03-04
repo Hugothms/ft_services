@@ -7,7 +7,7 @@ RUN apk add --no-cache telegraf --repository=http://nl.alpinelinux.org/alpine/ed
 RUN mkdir -p /etc/telegraf
 COPY telegraf.conf		/etc/telegraf/
 
-COPY grafana.db /grafana/data/grafana.db
+# COPY grafana.db /grafana/data/grafana.db
 
 COPY start.sh	start.sh
 RUN chmod +x	start.sh
