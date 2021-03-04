@@ -91,16 +91,16 @@ start_end()
 	#Initialize database
 	kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
 
-	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-	case $OS in
-		"Linux")
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
-		;;
-		"Darwin")
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
-		;;
-	*);;
-	esac
+	# CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
+	# case $OS in
+	# 	"Linux")
+	# 		sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+	# 	;;
+	# 	"Darwin")
+	# 		sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+	# 	;;
+	# *);;
+	# esac
 }
 
 start()
