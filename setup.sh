@@ -134,6 +134,7 @@ delete_all()
 	kubectl delete --all services
 	kubectl delete --all pvc
 	kubectl delete namespaces metallb-system
+	minikube stop
 	docker rmi $(docker images -a -q)
 	docker system prune -f
 }
