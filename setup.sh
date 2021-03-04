@@ -155,7 +155,7 @@ restart()
 	if [ "$#" -eq 0 ]; then
 		delete
 		start
-	elif [ $(is_a_service) -eq 1 ]; then
+	elif [ $(is_a_service) ]; then
 		kubectl delete -f srcs/yaml/$1.yaml
 		start_service $1
 	else
