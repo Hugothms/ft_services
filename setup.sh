@@ -1,4 +1,4 @@
-services="nginx mysql wordpress phpmyadmin grafana influxdb ftps"
+services="influxdb nginx mysql wordpress phpmyadmin grafana ftps"
 OS="`uname`"
 
 is_a_service()
