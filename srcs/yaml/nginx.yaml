@@ -36,9 +36,9 @@ spec:
       containers:
       - name: nginx
         image: nginx_i
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
           name: http
         - containerPort: 443
           name: https
-        imagePullPolicy: Never

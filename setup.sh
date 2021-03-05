@@ -1,4 +1,4 @@
-services="influxdb nginx mysql wordpress phpmyadmin grafana ftps"
+services="influxdb nginx mysql phpmyadmin wordpress grafana ftps"
 OS="`uname`"
 
 is_a_service()
@@ -52,12 +52,11 @@ start_minikube()
 	));;
 	esac
 	# echo "Minikube IP: ${CLUSTER_IP}"
-	eval $(minikube docker-env)
 
 	# echo "Enabling addons..."
 	minikube addons enable metrics-server
-	minikube addons enable dashboard
 	minikube addons enable metallb
+	minikube addons enable dashboard
 
 	# echo "Launching dashboard..."
 	minikube dashboard &
@@ -71,6 +70,8 @@ start_minikube()
 	# echo "Creating Persistent Volumes"
 	kubectl apply -f srcs/yaml/mysqlvol.yaml
 	kubectl apply -f srcs/yaml/influxdbvol.yaml
+	
+	eval $(minikube docker-env)
 }
 
 
