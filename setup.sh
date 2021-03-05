@@ -9,12 +9,12 @@ is_a_service()
 	fi
 	for service in $services
 	do
-		if [ service = $1 ]; then
+		if [ $service = $1 ]; then
 			echo 1
 			exit
 		fi
 	done
-	echo 0
+	echo 2
 }
 
 init()
@@ -155,7 +155,7 @@ restart()
 	if [ "$#" -eq 0 ]; then
 		delete
 		start
-	elif [ $(is_a_service) ]; then
+	elif [ $(is_a_service $1) = 1 ]; then
 		kubectl delete -f srcs/yaml/$1.yaml
 		start_service $1
 	else
