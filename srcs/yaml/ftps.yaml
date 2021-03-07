@@ -9,10 +9,10 @@ spec:
   ports:
   - port: 21
     targetPort: 21
-    name: ftps
-  - port: 30000
-    targetPort: 30000
-    name: ftps-data
+    name: ftps-21
+  - port: 21101
+    targetPort: 21101
+    name: ftps-data1
   selector:
     app: ftps
 ---

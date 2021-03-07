@@ -6,11 +6,11 @@ RUN mkdir -p /etc/telegraf
 COPY telegraf.conf		/etc/telegraf/
 
 RUN mkdir -p /etc/ssl/private
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt -subj '/CN=172.17.0.2'
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.key -out /etc/ssl/certs/vsftpd.crt -subj '/CN=192.168.49.2'
 
 COPY start.sh		.
 COPY vsftpd.conf	/etc/vsftpd/
 
-EXPOSE 20 21 21100 21101
+EXPOSE 20 21
 
 CMD /bin/sh start.sh
