@@ -38,16 +38,16 @@ start_minikube()
 	#Change settings depending on the platform
 	case $OS in
 		"Linux")
-			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
-			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
 		;;
 		"Darwin")
-			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
-			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
 		;;
 	));;
 	esac
@@ -107,10 +107,10 @@ start_end()
 	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
 	case $OS in
 		"Linux")
-			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" ./setup.sh
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
 		;;
 		"Darwin")
-			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" ./setup.sh
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
 		;;
 	*);;
 	esac
@@ -118,9 +118,16 @@ start_end()
 
 start()
 {
-	start_minikube
-	start_services
-	start_end
+	if [ "$#" -eq 0 ]; then
+		start_minikube
+		start_services
+		start_end
+	elif [ $(is_a_service $1) = 1 ]; then
+		start_service $1
+	else
+		minikube delete
+	fi
+	
 }
 
 delete_all()
@@ -143,7 +150,7 @@ delete()
 	elif [ $1 = "all" ]; then
 		delete_all
 	else
-		minikube delete
+		printf "usage: delete or delete all"
 	fi
 }
 
@@ -163,7 +170,7 @@ restart()
 if [ "$#" -eq 0 ]; then
 	restart
 elif [ $1 = "start" ]; then
-	start
+	start $2
 elif [ $1 = "delete" ]; then
 	delete $2
 else
