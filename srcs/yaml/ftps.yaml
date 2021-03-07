@@ -50,4 +50,3 @@ spec:
         #     port: 8085
         #   initialDelaySeconds: 10
         #   periodSeconds: 10
- # Liveness probe failed: OCI runtime exec failed: exec failed: container_linux.go:349: starting container process caused "exec: \"/bin/bash\": stat /bin/bash: no such file or directory": unknown
