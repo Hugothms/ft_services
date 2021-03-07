@@ -1,4 +1,4 @@
-services="influxdb nginx mysql phpmyadmin wordpress grafana ftps"
+services="nginx mysql wordpress phpmyadmin grafana influxdb ftps"
 OS="`uname`"
 
 is_a_service()
@@ -31,7 +31,7 @@ init()
 	docker-machine start
 }
 
-start_minikube()
+start_begin()
 {
 	minikube start --vm-driver=docker #--extra-config=apiserver.service-node-port-range=1-35000
 	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
@@ -74,6 +74,22 @@ start_minikube()
 	eval $(minikube docker-env)
 }
 
+start_end()
+{
+	#Initialize database
+	kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
+
+	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
+	case $OS in
+		"Linux")
+			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+		;;
+		"Darwin")
+			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+		;;
+	*);;
+	esac
+}
 
 build_docker_image()
 {
@@ -99,27 +115,11 @@ start_services()
 	done
 }
 
-start_end()
-{
-	#Initialize database
-	kubectl exec -i $(kubectl get pods | grep mysql | cut -d" " -f1) -- mysql wordpress -u root < srcs/mysql/wordpress.sql
-
-	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
-	case $OS in
-		"Linux")
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
-		;;
-		"Darwin")
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
-		;;
-	*);;
-	esac
-}
 
 start()
 {
 	if [ "$#" -eq 0 ]; then
-		start_minikube
+		start_begin
 		start_services
 		start_end
 	elif [ $(is_a_service $1) = 1 ]; then
@@ -168,7 +168,7 @@ restart()
 }
 
 if [ "$#" -eq 0 ]; then
-	restart
+	start
 elif [ $1 = "start" ]; then
 	start $2
 elif [ $1 = "delete" ]; then

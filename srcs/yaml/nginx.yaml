@@ -41,8 +41,7 @@ spec:
         #   exec:
         #     command:
         #     - /bin/bash
-        #     - -c
-        #     - /livenessProbe.sh
+        #     - 
         #   initialDelaySeconds: 60
         #   periodSeconds: 10
         ports:

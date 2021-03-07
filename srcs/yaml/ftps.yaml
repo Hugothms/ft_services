@@ -36,11 +36,18 @@ spec:
       - name: ftps
         image: ftps_i
         imagePullPolicy: Never
-        # livenessProbe:
-        #   exec:
-        #     command:
-        #     - /bin/bash
-        #     - -c
-        #     - ps | grep vsftpd | head -n -1
-        #   initialDelaySeconds: 60
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - if [[ $(ps | grep vsftpd | head -n -1 | wc -l) = 0 ]]; then exit 0; else exit 1; fi
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        # livenessProbe: 
+        #   failureThreshold: 1
+        #   httpGet: 
+        #     path: /weblearner/health
+        #     port: 8085
+        #   initialDelaySeconds: 10
         #   periodSeconds: 10
+ # Liveness probe failed: OCI runtime exec failed: exec failed: container_linux.go:349: starting container process caused "exec: \"/bin/bash\": stat /bin/bash: no such file or directory": unknown
