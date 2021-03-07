@@ -11,3 +11,5 @@ admin/admin
 
 ftps:
 admin/admin
+lftp -u admin,admin MINIKUBE_IP
+set ssl:verify-certificate no
