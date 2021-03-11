@@ -34,13 +34,14 @@ spec:
       - name: grafana
         image: grafana_i
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - /bin/ash
+            - -c
+            - 'pgrep grafana && pgrep telegraf'
+          initialDelaySeconds: 30
+          periodSeconds: 10
         ports:
         - name: grafana
           containerPort: 3000
-        # livenessProbe:
-        #   exec:
-        #     command:
-        #     - /bin/bash
-        #     - 
-        #   initialDelaySeconds: 60
-        #   periodSeconds: 10

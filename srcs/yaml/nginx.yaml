@@ -37,13 +37,14 @@ spec:
       - name: nginx
         image: nginx_i
         imagePullPolicy: Never
-        # livenessProbe:
-        #   exec:
-        #     command:
-        #     - /bin/bash
-        #     - 
-        #   initialDelaySeconds: 60
-        #   periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - /bin/ash
+            - -c
+            - 'pgrep nginx && pgrep telegraf'
+          initialDelaySeconds: 30
+          periodSeconds: 10
         ports:
         - containerPort: 80
           name: http
