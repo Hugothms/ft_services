@@ -16,7 +16,7 @@ RUN mkdir -p /etc/telegraf
 COPY telegraf.conf		/etc/telegraf/
 
 # SSL Key
-RUN mkdir -p /etc/nginx/ssl && openssl req -newkey rsa:2048 -x509 -days 365 -nodes -keyout /etc/nginx/ssl/services.key -out /etc/nginx/ssl/services.pem -subj "/C=FR/ST=Paris/L=Paris/O=42, Inc./OU=hthomas/CN=www.localhost"
+RUN mkdir -p /etc/nginx/ssl && openssl req -newkey rsa:2048 -x509 -days 365 -nodes -keyout /etc/nginx/ssl/services.key -out /etc/nginx/ssl/services.pem -subj "/C=FR/ST=Paris/L=Paris/O=42, Inc./OU=hthomas/CN=192.168.49.2"
 RUN usr/bin/ssh-keygen -A
 
 # Nginx config

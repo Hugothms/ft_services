@@ -2,9 +2,9 @@
 
 telegraf &
 
-adduser -D "$SSH_USER"
+adduser -D user42
 # update passwords for the new user
-echo "$SSH_USER:$SSH_PASSWORD" | chpasswd
+echo "user42:user42" | chpasswd
 
 # sshd (OpenSSH Daemon) is the daemon program for ssh
 # Together these programs replace rlogin and rsh, and provide secure
