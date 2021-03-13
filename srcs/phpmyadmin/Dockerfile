@@ -9,11 +9,11 @@ RUN wget http://files.directadmin.com/services/all/phpMyAdmin/phpMyAdmin-5.0.2-a
                 rm phpMyAdmin-5.0.2-all-languages.tar.gz && \
 		mv phpMyAdmin-5.0.2-all-languages /phpmyadmin
 
-RUN mkdir		/phpmyadmin/tmp
-RUN	chmod 777 /phpmyadmin/tmp
-RUN mkdir		/var/run/php
+RUN mkdir -p		/phpmyadmin/tmp
+RUN	chmod 777 		/phpmyadmin/tmp
 COPY config.inc.php /phpmyadmin/config.inc.php
-RUN mkdir -p	/var/run/nginx
+RUN mkdir -p		/var/run/php
+RUN mkdir -p		/var/run/nginx
 RUN	rm 				/etc/nginx/conf.d/default.conf
 COPY default.conf 	/etc/nginx/conf.d/
 

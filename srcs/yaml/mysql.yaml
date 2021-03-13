@@ -37,8 +37,16 @@ spec:
         image: mysql_i
         imagePullPolicy: Never
         livenessProbe:
-          tcpSocket:
-            port: 3306
+          exec:
+            command:
+            - /bin/ash
+            - -c
+            - 'pgrep mysql && pgrep telegraf'        
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        # livenessProbe:
+        #   tcpSocket:
+        #     port: 3306
         ports:
           - containerPort: 3306
             name: mysql
