@@ -38,20 +38,20 @@ start_begin()
 	#Change settings depending on the platform
 	case $OS in
 		"Linux")
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/Dockerfile
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/phpmyadmin/Dockerfile
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/Dockerfile
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/phpmyadmin/Dockerfile
 		;;
 		"Darwin")
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/nginx/Dockerfile
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" srcs/phpmyadmin/Dockerfile
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/yaml/metallb-configmap.yaml
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/nginx.conf
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/mysql/wordpress.sql
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/ftps/Dockerfile
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/nginx/Dockerfile
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" srcs/phpmyadmin/Dockerfile
 		;;
 	));;
 	esac
@@ -86,10 +86,10 @@ start_end()
 	CLUSTER_IP="$(kubectl get node -o=custom-columns='DATA:status.addresses[0].address' | sed -n 2p)"
 	case $OS in
 		"Linux")
-			sed -i "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+			sed -i "s/"172.17.0.2"/"$CLUSTER_IP"/g" ./setup.sh
 		;;
 		"Darwin")
-			sed -i '' "s/"192.168.49.2"/"$CLUSTER_IP"/g" ./setup.sh
+			sed -i '' "s/"172.17.0.2"/"$CLUSTER_IP"/g" ./setup.sh
 		;;
 	*);;
 	esac
